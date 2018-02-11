@@ -18,6 +18,7 @@ var conflictGridTextColor = "red";
 
 var gridMatrix = []; //a two dimensions array that holds Grid objects
 var currentSelectedGridObj = null;
+var prevInitMatrixIndex = null;
 
 var Coordinate = function(x, y) {
     this.x = x;
@@ -120,6 +121,10 @@ function refreshGrids(bCheckCompletion) {
     }
     if (!bNotFinishedYet && bCheckCompletion) {
         alert("Good Job.");
+        prevInitMatrixIndex = randomPick(initMatrixArray.length);
+        var initMatrix = initMatrixArray[prevInitMatrixIndex];
+        fillInGrids(initMatrix);
+        refreshGrids(false);
     }
 };
 
@@ -158,6 +163,7 @@ function fillInGrids(initMatrix) {
                 td.css("font-weight", "bold");
             } else {
                 gridObj.bIsInitGrid = false;
+                td.text("");
             }
         }
     }
@@ -195,33 +201,20 @@ function createGrids() {
     }
 };
 
-var initMatrix1 = [
-    /* row 1 */ [0, 0, 8, 2, 0, 0, 9, 0, 3],
-    /* row 2 */ [3, 4, 2, 0, 9, 5, 0, 0, 7],
-    /* row 3 */ [1, 9, 7, 0, 0, 0, 0, 0, 4],
-    /* row 4 */ [0, 0, 5, 3, 1, 2, 4, 7, 9],
-    /* row 5 */ [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    /* row 6 */ [2, 0, 0, 0, 7, 4, 5, 0, 0],
-    /* row 7 */ [0, 2, 0, 0, 0, 1, 0, 0, 5],
-    /* row 8 */ [0, 7, 0, 0, 0, 6, 8, 9, 1],
-    /* row 9 */ [8, 0, 0, 4, 3, 0, 7, 0, 6],
-];
-
-var initMatrix = [
-    /* row 1 */ [5, 6, 8, 2, 4, 7, 9, 1, 3],
-    /* row 2 */ [3, 4, 2, 1, 9, 5, 0, 0, 7],
-    /* row 3 */ [1, 9, 7, 8, 6, 3, 2, 5, 4],
-    /* row 4 */ [6, 8, 5, 3, 1, 2, 4, 7, 9],
-    /* row 5 */ [7, 3, 4, 9, 5, 8, 1, 6, 2],
-    /* row 6 */ [2, 1, 9, 6, 7, 4, 5, 3, 8],
-    /* row 7 */ [9, 2, 6, 7, 8, 1, 3, 4, 5],
-    /* row 8 */ [4, 7, 3, 5, 2, 6, 8, 9, 1],
-    /* row 9 */ [8, 5, 1, 4, 3, 9, 7, 2, 6],
-];
+function randomPick(size, prevIndex) {
+    while (true) {
+        var index = Math.floor(Math.random() * size);
+        if (index != prevIndex) {
+            return index;
+        }
+    }
+}
 
 $(document).ready(function() {
+    $(document).keyup(onKeyUp);
     createGrids();
+    prevInitMatrixIndex = randomPick(initMatrixArray.length);
+    var initMatrix = initMatrixArray[prevInitMatrixIndex];
     fillInGrids(initMatrix);
     refreshGrids(false);
-    $(document).keyup(onKeyUp);
 });
