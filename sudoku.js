@@ -14,7 +14,8 @@ var selectedRowColor = "RGB(231, 242, 158)";
 var selectedColumnColor = "RGB(231, 242, 158)";
 var initGridTextColor = "black";
 var inputGridTextColor = "blue";
-var conflictGridTextColor = "red";
+var conflictInputGridTextColor = "red";
+var conflictInitGridTextColor = "RGB(178,47,47)";
 
 var gridMatrix = []; //a two dimensions array that holds Grid objects
 var currentSelectedGridObj = null;
@@ -111,7 +112,11 @@ function refreshGrids(bCheckCompletion) {
                     }
                 }
                 if (bConflictFound) {
-                    td.css("color", conflictGridTextColor);
+                    if (gridObj.bIsInitGrid) {
+                        td.css("color", conflictInitGridTextColor);
+                    } else {
+                        td.css("color", conflictInputGridTextColor);
+                    }
                     bNotFinishedYet = true;
                 }
             } else {
