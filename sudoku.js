@@ -30,7 +30,7 @@ var Coordinate = function(x, y) {
 var Grid = function(x, y) {
     this.coordinate = new Coordinate(x, y);
     this.bIsInitGrid = false;
-    this.ele = null;
+    this.tdElement = null; //jQuery object of <td> element
 };
 
 var Operation = function() {
@@ -61,7 +61,7 @@ function refreshGrids(bCheckCompletion) {
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
             var gridObj = gridMatrix[i][j];
-            var td = gridObj.ele;
+            var td = gridObj.tdElement;
             if (gridObj.bIsInitGrid) {
                 td.css("color", initGridTextColor);
             } else {
@@ -87,7 +87,7 @@ function refreshGrids(bCheckCompletion) {
                 for (var k = 0; k < 9; k++) {
                     if (k == j) continue;
                     var otherGrid = gridMatrix[i][k];
-                    if (otherGrid.ele.text() == td.text()) {
+                    if (otherGrid.tdElement.text() == td.text()) {
                         bConflictFound = true;
                         break;
                     }
@@ -96,7 +96,7 @@ function refreshGrids(bCheckCompletion) {
                 for (var k = 0; k < 9; k++) {
                     if (k == i) continue;
                     var otherGrid = gridMatrix[k][j];
-                    if (otherGrid.ele.text() == td.text()) {
+                    if (otherGrid.tdElement.text() == td.text()) {
                         bConflictFound = true;
                         break;
                     }
@@ -110,7 +110,7 @@ function refreshGrids(bCheckCompletion) {
                             continue;
                         }
                         var otherGrid = gridMatrix[m][n];
-                        if (otherGrid.ele.text() == td.text()) {
+                        if (otherGrid.tdElement.text() == td.text()) {
                             bConflictFound = true;
                             m = n = 9; //quit the loops
                         }
@@ -147,7 +147,7 @@ function onKeyUp(eventObj) {
     var operation = new Operation();
     operation.gridObj = currentSelectedGridObj;
     operation.time = new Date();
-    operation.originalValue = currentSelectedGridObj.ele.text();
+    operation.originalValue = currentSelectedGridObj.tdElement.text();
     if (eventObj.which == 8 //backspace key
         || eventObj.which == 46 //delete key
         || eventObj.which == 48) { // '0' number key
@@ -158,7 +158,7 @@ function onKeyUp(eventObj) {
             return;
         }
         strNumber = "" + number;
-        if (currentSelectedGridObj.ele.text() == strNumber) {
+        if (currentSelectedGridObj.tdElement.text() == strNumber) {
             strNumber = "";
         }
     } else {
@@ -166,7 +166,7 @@ function onKeyUp(eventObj) {
     }
     operation.newValue = strNumber;
     histories.push(operation);
-    currentSelectedGridObj.ele.text(strNumber);
+    currentSelectedGridObj.tdElement.text(strNumber);
     refreshGrids(true);
 }
 // initMatrix must be a 9x9 two dimesion array containing numbers
@@ -174,7 +174,7 @@ function fillInGrids(initMatrix) {
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
             var gridObj = gridMatrix[i][j];
-            var td = gridObj.ele;
+            var td = gridObj.tdElement;
             if (initMatrix[i][j] != 0) {
                 gridObj.bIsInitGrid = true;
                 td.text("" + initMatrix[i][j]);
@@ -200,7 +200,7 @@ function createGrids() {
             tr.append(td);
             var gridObj = new Grid(j, i);
             td[0].gridObj = gridObj;
-            gridObj.ele = $(td[0]);
+            gridObj.tdElement = $(td[0]);
             gridMatrix[i].push(gridObj);
             td.click(onTdClicked);
             //check if it's at the edge of a 3x3 subregion, if so, use a wider border
@@ -233,8 +233,8 @@ function undo() {
     if (histories.length == 0) return;
     var oper = histories.pop();
     //console.log(oper);
-    oper.gridObj.ele.text(oper.originalValue);
-    oper.gridObj.ele.click();
+    oper.gridObj.tdElement.text(oper.originalValue);
+    oper.gridObj.tdElement.click();
 }
 
 $(document).ready(function() {
