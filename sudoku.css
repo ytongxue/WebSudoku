@@ -1,6 +1,6 @@
 div#sudoku {
     width: 486px;
-    margin-top: 50px;
+    margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -17,6 +17,18 @@ div#sudoku table td {
 
 div#sudoku form#keyReceiver {
     display: none;
+}
+
+div#header div#tools table {
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div#header div#tools table input {
+    height: 35px;
+    width: 90px;
+    font-size: 20px;
 }
 
 /*

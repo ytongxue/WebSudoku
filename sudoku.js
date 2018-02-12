@@ -20,6 +20,7 @@ var conflictInitGridTextColor = "RGB(178,47,47)";
 var gridMatrix = []; //a two dimensions array that holds Grid objects
 var currentSelectedGridObj = null;
 var prevInitMatrixIndex = null;
+var histories = []; //array of Operation objects
 
 var Coordinate = function(x, y) {
     this.x = x;
@@ -32,12 +33,19 @@ var Grid = function(x, y) {
     this.ele = null;
 };
 
+var Operation = function() {
+    this.gridObj = null;
+    this.originalValue = "";
+    this.newValue = "";
+    this.time = null;
+}
+
 function getSugregionIndex(coordinate)
 {
     return Math.floor(coordinate.y / 3) * 3 + Math.floor(coordinate.x / 3);
 }
 function onTdClicked(eventObj) {
-    console.log(eventObj);
+    //console.log(eventObj);
     currentSelectedGridObj = eventObj.target.gridObj;
     refreshGrids(false);
 }
@@ -102,9 +110,6 @@ function refreshGrids(bCheckCompletion) {
                             continue;
                         }
                         var otherGrid = gridMatrix[m][n];
-                        if (!otherGrid) {
-                            console.log("shit at ", i, j, m, n);
-                        }
                         if (otherGrid.ele.text() == td.text()) {
                             bConflictFound = true;
                             m = n = 9; //quit the loops
@@ -134,16 +139,20 @@ function refreshGrids(bCheckCompletion) {
 };
 
 function onKeyUp(eventObj) {
-    console.log(eventObj.which);
+    //console.log(eventObj.which);
     if (!currentSelectedGridObj || currentSelectedGridObj.bIsInitGrid) {
         return;
     }
     var strNumber;
+    var operation = new Operation();
+    operation.gridObj = currentSelectedGridObj;
+    operation.time = new Date();
+    operation.originalValue = currentSelectedGridObj.ele.text();
     if (eventObj.which == 8 //backspace key
         || eventObj.which == 46 //delete key
         || eventObj.which == 48) { // '0' number key
         strNumber = "";
-    } else {
+    } else if (eventObj.which >= 49 && eventObj.which <= 57) {//'1'~'9'
         var number = eventObj.which - 48;
         if (number < 1 || number > 9) {
             return;
@@ -152,7 +161,11 @@ function onKeyUp(eventObj) {
         if (currentSelectedGridObj.ele.text() == strNumber) {
             strNumber = "";
         }
+    } else {
+        return;
     }
+    operation.newValue = strNumber;
+    histories.push(operation);
     currentSelectedGridObj.ele.text(strNumber);
     refreshGrids(true);
 }
@@ -172,6 +185,7 @@ function fillInGrids(initMatrix) {
             }
         }
     }
+    histories = [];
 }
 
 function createGrids() {
@@ -215,8 +229,17 @@ function randomPick(size, prevIndex) {
     }
 }
 
+function undo() {
+    if (histories.length == 0) return;
+    var oper = histories.pop();
+    //console.log(oper);
+    oper.gridObj.ele.text(oper.originalValue);
+    oper.gridObj.ele.click();
+}
+
 $(document).ready(function() {
     $(document).keyup(onKeyUp);
+    $("input#undoButton").click(undo);
     createGrids();
     prevInitMatrixIndex = randomPick(initMatrixArray.length);
     var initMatrix = initMatrixArray[prevInitMatrixIndex];
