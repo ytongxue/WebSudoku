@@ -165,7 +165,9 @@ function onKeyUp(eventObj) {
         return;
     }
     operation.newValue = strNumber;
-    histories.push(operation);
+    if (operation.originalValue != operation.newValue) {
+        histories.push(operation);
+    }
     currentSelectedGridObj.tdElement.text(strNumber);
     refreshGrids(true);
 }
