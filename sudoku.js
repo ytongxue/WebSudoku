@@ -224,12 +224,23 @@ function undo() {
     oper.gridObj.tdElement.click();
 }
 
+function clear() {
+    if (!currentSelectedGridObj) return;
+    var eventObj = {
+        which : 8, //backspace key
+        target : currentSelectedGridObj.tdElement,
+    };
+    onKeyUp(eventObj);
+}
+
 $(document).ready(function() {
-    $(document).keyup(onKeyUp);
-    $("input#undoButton").click(undo);
     createGrids();
     prevInitMatrixIndex = randomPick(initMatrixArray.length);
     var initMatrix = initMatrixArray[prevInitMatrixIndex];
     fillInGrids(initMatrix);
     refreshGrids(false);
 });
+
+$(document).keyup(onKeyUp);
+$("input#undoButton").click(undo);
+$("input#undoClear").click(clear);
