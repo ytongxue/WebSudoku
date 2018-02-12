@@ -203,19 +203,6 @@ function createGrids() {
             gridObj.tdElement = $(td[0]);
             gridMatrix[i].push(gridObj);
             td.click(onTdClicked);
-            //check if it's at the edge of a 3x3 subregion, if so, use a wider border
-            if (j == 0) {
-                td.css("border-left", edgeBorderStyle);
-            }
-            if (j == 2 || j == 5 || j == 8) {
-                td.css("border-right", edgeBorderStyle);
-            }
-            if (i == 0) {
-                td.css("border-top", edgeBorderStyle);
-            }
-            if (i == 2 || i == 5 || i == 8) {
-                td.css("border-bottom", edgeBorderStyle);
-            }
         }
     }
 };
