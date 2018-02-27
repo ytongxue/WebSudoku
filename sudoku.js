@@ -25,7 +25,7 @@ var matricesCountForEachMode = {
 var gridMatrix = []; //a two dimensions array that holds Grid objects
 var currentSelectedGridObj = null;
 var prevInitMatrixIndex = null;
-var histories = []; //array of Operation objects
+var modificationHistories = []; //array of Operation objects
 
 var Coordinate = function(x, y) {
     this.x = x;
@@ -168,7 +168,7 @@ function onKeyUp(eventObj) {
     }
     operation.newValue = strNumber;
     if (operation.originalValue != operation.newValue) {
-        histories.push(operation);
+        modificationHistories.push(operation);
     }
     currentSelectedGridObj.tdElement.text(strNumber);
     refreshGrids(true);
@@ -189,7 +189,7 @@ function fillInGrids(initMatrix) {
             }
         }
     }
-    histories = [];
+    modificationHistories = [];
 }
 
 function createGrids() {
@@ -222,8 +222,8 @@ function randomPick(size, prevIndex) {
 }
 
 function undo() {
-    if (histories.length == 0) return;
-    var oper = histories.pop();
+    if (modificationHistories.length == 0) return;
+    var oper = modificationHistories.pop();
     //console.log(oper);
     oper.gridObj.tdElement.text(oper.originalValue);
     oper.gridObj.tdElement.click();
@@ -244,7 +244,7 @@ function nextSudoku() {
     $.getJSON(url, null, function(data) {
         fillInGrids(data.values);
         refreshGrids(false);
-        histories.length = 0;
+        modificationHistories.length = 0;
     });
 }
 
@@ -256,5 +256,4 @@ $(document).ready(function() {
 $(document).keyup(onKeyUp);
 $("input#undoButton").click(undo);
 $("input#clearButton").click(clear);
-$("input#undoButton").click(undo);
 $("input#nextButton").click(nextSudoku);
