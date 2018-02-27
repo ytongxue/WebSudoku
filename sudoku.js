@@ -254,4 +254,4 @@ $(document).ready(function() {
 
 $(document).keyup(onKeyUp);
 $("input#undoButton").click(undo);
-$("input#undoClear").click(clear);
+$("input#clearButton").click(clear);
