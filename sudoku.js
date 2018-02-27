@@ -225,6 +225,10 @@ function undo() {
     if (modificationHistories.length == 0) return;
     var oper = modificationHistories.pop();
     //console.log(oper);
+    if (oper.gridObj.bIsInitGrid) {
+        console.log("Fatal Error! This is a unmodifiable grid");
+        return;
+    }
     oper.gridObj.tdElement.text(oper.originalValue);
     oper.gridObj.tdElement.click();
 }
