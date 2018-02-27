@@ -214,9 +214,9 @@ function createGrids() {
 function randomPick(size, prevIndex) {
     if (size == 1) return 1;
     while (true) {
-        var index = Math.floor(Math.random() * size);
+        var index = Math.floor(Math.random() * size) + 1;
         if (index != prevIndex) {
-            return index + 1;
+            return index;
         }
     }
 }
@@ -255,3 +255,5 @@ $(document).ready(function() {
 $(document).keyup(onKeyUp);
 $("input#undoButton").click(undo);
 $("input#clearButton").click(clear);
+$("input#undoButton").click(undo);
+$("input#nextButton").click(nextSudoku);
