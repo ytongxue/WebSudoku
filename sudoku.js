@@ -244,6 +244,7 @@ function nextSudoku() {
     $.getJSON(url, null, function(data) {
         fillInGrids(data.values);
         refreshGrids(false);
+        histories.length = 0;
     });
 }
 
