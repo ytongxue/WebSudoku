@@ -16,6 +16,11 @@ var initGridTextColor = "black";
 var inputGridTextColor = "blue";
 var conflictInputGridTextColor = "red";
 var conflictInitGridTextColor = "RGB(178,47,47)";
+var currentMode = "easy";
+var modeArray = ["easy"];
+var matricesCountForEachMode = {
+    "easy" : 3,
+};
 
 var gridMatrix = []; //a two dimensions array that holds Grid objects
 var currentSelectedGridObj = null;
@@ -131,10 +136,7 @@ function refreshGrids(bCheckCompletion) {
     }
     if (!bNotFinishedYet && bCheckCompletion) {
         alert("Good Job.");
-        prevInitMatrixIndex = randomPick(initMatrixArray.length);
-        var initMatrix = initMatrixArray[prevInitMatrixIndex];
-        fillInGrids(initMatrix);
-        refreshGrids(false);
+        nextSudoku();
     }
 };
 
@@ -213,7 +215,7 @@ function randomPick(size, prevIndex) {
     while (true) {
         var index = Math.floor(Math.random() * size);
         if (index != prevIndex) {
-            return index;
+            return index + 1;
         }
     }
 }
@@ -235,12 +237,18 @@ function clear() {
     onKeyUp(eventObj);
 }
 
+function nextSudoku() {
+    prevInitMatrixIndex = matrixIndex = randomPick(matricesCountForEachMode[currentMode]);
+    var url = "/initMatrices/easy/" + matrixIndex + ".json"
+    $.getJSON(url, null, function(data) {
+        fillInGrids(data.values);
+        refreshGrids(false);
+    });
+}
+
 $(document).ready(function() {
     createGrids();
-    prevInitMatrixIndex = randomPick(initMatrixArray.length);
-    var initMatrix = initMatrixArray[prevInitMatrixIndex];
-    fillInGrids(initMatrix);
-    refreshGrids(false);
+    nextSudoku();
 });
 
 $(document).keyup(onKeyUp);
