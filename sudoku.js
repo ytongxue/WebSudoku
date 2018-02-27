@@ -17,7 +17,7 @@ var inputGridTextColor = "blue";
 var conflictInputGridTextColor = "red";
 var conflictInitGridTextColor = "RGB(178,47,47)";
 var currentMode = "easy";
-var modeArray = ["easy"];
+var modeArray = [ "easy" ];
 var matricesCountForEachMode = {
     "easy" : 3,
 };
@@ -210,8 +210,9 @@ function createGrids() {
         }
     }
 };
-
+// return value range: [1, size]
 function randomPick(size, prevIndex) {
+    if (size == 1) return 1;
     while (true) {
         var index = Math.floor(Math.random() * size);
         if (index != prevIndex) {
@@ -238,7 +239,7 @@ function clear() {
 }
 
 function nextSudoku() {
-    prevInitMatrixIndex = matrixIndex = randomPick(matricesCountForEachMode[currentMode]);
+    prevInitMatrixIndex = matrixIndex = randomPick(matricesCountForEachMode[currentMode], prevInitMatrixIndex);
     var url = "/initMatrices/easy/" + matrixIndex + ".json"
     $.getJSON(url, null, function(data) {
         fillInGrids(data.values);
